@@ -22,7 +22,9 @@ public class Main {
 
     public static String tactic(MapInfo mapInfo) {
         mapInfo.updateMapInfo();
-
+        //set safenode, restrictednode
+        //sort safenode by value
+        //use astarsearch
         int [][] map = mapInfo.getMap();
 
         System.out.println("Int array: ");
