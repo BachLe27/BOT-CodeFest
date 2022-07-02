@@ -94,7 +94,6 @@ public class MapInfo {
             }
         }
 
-
         for (int i = 0; i < size.rows; i++) {
             int[] map = this.map.get(i);
             for (int j = 0; j < size.cols; j++) {
@@ -103,6 +102,8 @@ public class MapInfo {
             System.out.println();
         }
     }
+
+
 
     // Todo: Convert all data in MapInfo to List<Node>
     // EG: List<Viruses> viruses -> List<Node> viruses with value = 3
@@ -115,7 +116,62 @@ public class MapInfo {
     // Wall = 0
     // TELEPORT_GATE = 1
     // QUARANTINE_PLACE = -1
-    // blank =
+    // blank = 4
+
+    public List<Node> getBalks() {
+        int balkValue = 6;
+        List<Node> balks = new ArrayList<>();
+        for (Position balk: this.balk) {
+            Node temp = Node.createFromPosition(balk);
+            temp.setV(balkValue);
+            balks.add(temp);
+        }
+        return balks;
+    }
+
+    public List<Node> getWalls() {
+        int wallValue = 0;
+        List<Node> walls = new ArrayList<>();
+        for (Position wall: this.walls) {
+            Node temp = Node.createFromPosition(wall);
+            temp.setV(wallValue);
+            walls.add(temp);
+        }
+        return walls;
+    }
+
+    public List<Node> getTeleportGates() {
+        int teleportGateValue = 0;
+        List<Node> teleportGates = new ArrayList<>();
+        for (Position gate: this.teleportGate) {
+            Node temp = Node.createFromPosition(gate);
+            temp.setV(teleportGateValue);
+            teleportGates.add(temp);
+        }
+        return teleportGates;
+    }
+
+    public List<Node> getQuarantines() {
+        int quarantineValue = -1;
+        List<Node> quarantines = new ArrayList<>();
+        for (Position quarantine: this.quarantinePlace) {
+            Node temp = Node.createFromPosition(quarantine);
+            temp.setV(quarantineValue);
+            quarantines.add(temp);
+        }
+        return quarantines;
+    }
+
+    public List<Node> getBlanks() {
+        int blankValue = 4;
+        List<Node> blanks = new ArrayList<>();
+        for (Position blank: this.blank) {
+            Node temp = Node.createFromPosition(blank);
+            temp.setV(blank);
+            blanks.add(temp);
+        }
+        return blanks;
+    }
 
     //lay ra list Node cac viruss va node viruss sap di toi
     public List<Node> getDHumanList() {
