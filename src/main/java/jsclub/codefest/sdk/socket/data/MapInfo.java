@@ -66,8 +66,6 @@ public class MapInfo {
     }
 
     public void updateMapInfo() {
-        //blank -> 2
-
         for (int i = 0; i < size.rows; i++) {
             int[] map = this.map.get(i);
             for (int j = 0; j < size.cols; j++) {
@@ -75,16 +73,16 @@ public class MapInfo {
                     case MapEncode.ROAD:
                         blank.add(new Position(j, i));
                         break;
-                    case MapEncode.WALL: // 1
+                    case MapEncode.WALL:
                         walls.add(new Position(j, i));
                         break;
-                    case MapEncode.BALK: // 3
+                    case MapEncode.BALK:
                         balk.add(new Position(j, i));
                         break;
-                    case MapEncode.TELEPORT_GATE: // 0
+                    case MapEncode.TELEPORT_GATE:
                         teleportGate.add(new Position(j, i));
                         break;
-                    case MapEncode.QUARANTINE_PLACE: // -1
+                    case MapEncode.QUARANTINE_PLACE:
                         quarantinePlace.add(new Position(j, i));
                         break;
                     default:
