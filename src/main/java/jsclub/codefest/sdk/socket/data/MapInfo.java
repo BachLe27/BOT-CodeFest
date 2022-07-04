@@ -117,7 +117,7 @@ public class MapInfo {
     // blank = 4
 
     public List<Node> getBalks() {
-        int balkValue = 6;
+        double balkValue = 6;
         List<Node> balks = new ArrayList<>();
         for (Position balk: this.balk) {
             Node temp = Node.createFromPosition(balk);
@@ -128,7 +128,7 @@ public class MapInfo {
     }
 
     public List<Node> getWalls() {
-        int wallValue = 0;
+        double wallValue = 0;
         List<Node> walls = new ArrayList<>();
         for (Position wall: this.walls) {
             Node temp = Node.createFromPosition(wall);
@@ -139,7 +139,7 @@ public class MapInfo {
     }
 
     public List<Node> getTeleportGates() {
-        int teleportGateValue = 0;
+        double teleportGateValue = 0;
         List<Node> teleportGates = new ArrayList<>();
         for (Position gate: this.teleportGate) {
             Node temp = Node.createFromPosition(gate);
@@ -150,7 +150,7 @@ public class MapInfo {
     }
 
     public List<Node> getQuarantines() {
-        int quarantineValue = -1;
+        double quarantineValue = -1;
         List<Node> quarantines = new ArrayList<>();
         for (Position quarantine: this.quarantinePlace) {
             Node temp = Node.createFromPosition(quarantine);
@@ -161,7 +161,7 @@ public class MapInfo {
     }
 
     public List<Node> getBlanks() {
-        int blankValue = 4;
+        double blankValue = 4;
         List<Node> blanks = new ArrayList<>();
         for (Position blank: this.blank) {
             Node temp = Node.createFromPosition(blank);
