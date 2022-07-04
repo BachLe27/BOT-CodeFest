@@ -165,7 +165,7 @@ public class MapInfo {
         List<Node> blanks = new ArrayList<>();
         for (Position blank: this.blank) {
             Node temp = Node.createFromPosition(blank);
-            temp.setV(blank);
+            temp.setV(blankValue);
             blanks.add(temp);
         }
         return blanks;
