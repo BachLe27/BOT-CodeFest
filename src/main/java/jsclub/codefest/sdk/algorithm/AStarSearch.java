@@ -1,12 +1,14 @@
 package jsclub.codefest.sdk.algorithm;
 
 import jsclub.codefest.sdk.constant.MapEncode;
+import jsclub.codefest.sdk.model.Hero;
+import jsclub.codefest.sdk.socket.data.MapInfo;
 import jsclub.codefest.sdk.socket.data.Node;
 import jsclub.codefest.sdk.socket.data.Position;
 import java.util.*;
 
 public class AStarSearch extends BaseAlgorithm{
-    String aStarSearch(int[][] matrix, List<Position> restrictNode, Position start, Position end) {
+    public static  String aStarSearch(int[][] matrix, List<Position> restrictNode, Position start, Position end) {
         Node startNode = Node.createFromPosition(start);
         Node endNode = Node.createFromPosition(end);
 
@@ -19,7 +21,7 @@ public class AStarSearch extends BaseAlgorithm{
         return getStepsInString(startNode, steps);
     }
 
-    Stack<Node> aStarSearch(int[][] matrix, List<Node> restrictNode, Node start, Node target) {
+    public static Stack<Node> aStarSearch(int[][] matrix, List<Node> restrictNode, Node start, Node target) {
         int mMapWidth = matrix.length;
         int mMapHeight = matrix[0].length;
 
@@ -62,7 +64,7 @@ public class AStarSearch extends BaseAlgorithm{
                 // in the closed list, then no action is taken and the next Node continues to be
                 // examined;
                 if (
-                    (!n.equals(target) && !this.isValidNode(matrix, n, restrictNode))
+                    (!n.equals(target) && ! isValidNode(matrix, n, restrictNode))
                     || closeList.contains(n)
                     || n.getX() > mMapWidth
                     || n.getX() < 1
@@ -120,15 +122,83 @@ public class AStarSearch extends BaseAlgorithm{
         return new Stack<>();
     }
 
-    Boolean isValidNode(int[][] matrix, Node n, List<Node> restrictNode) {
-        if (matrix[n.getX()][n.getY()] == MapEncode.ROAD) {
+    static Boolean isValidNode(int[][] matrix, Node n, List<Node> restrictNode) {
+        if (matrix[n.getY()][n.getX()] == MapEncode.ROAD) {
             return true;
         }
 
-        if (matrix[n.getX()][n.getY()] == MapEncode.WALL) {
+        if (matrix[n.getY()][n.getX()] == MapEncode.WALL || matrix[n.getY()][n.getX()] == MapEncode.BALK
+        || matrix[n.getY()][n.getX()] == MapEncode.QUARANTINE_PLACE || matrix[n.getY()][n.getX()] == MapEncode.TELEPORT_GATE) {
             return false;
         }
 
         return !restrictNode.contains(n);
+    }
+    public static Map<Node, Stack<Node>> getPathsToAllFoods(MapInfo mapInfo, Hero hero, List<Node> targets, boolean isCollectSpoils) {
+        List<Node> restrictedNode=new ArrayList<>();
+        restrictedNode.addAll(mapInfo.getVirussList());
+        restrictedNode.addAll(mapInfo.getBalks());
+        restrictedNode.addAll(mapInfo.getBombList());
+        restrictedNode.addAll(mapInfo.getDHumanList());
+        restrictedNode.addAll(mapInfo.getQuarantines());
+        restrictedNode.addAll(mapInfo.getTeleportGates());
+        restrictedNode.addAll(mapInfo.getWalls());
+        Map<Node, Stack<Node>> allPaths = new HashMap<>();
+        Queue<Node> open = new LinkedList<>();
+        Set<String> visited = new HashSet<>();// Record the visited Node
+        List<Node> target = new ArrayList<>(targets);
+        open.add(Node.createFromPosition(mapInfo.getCurrentPosition(hero)));
+        //open.add(clonePlayer.getPosition());
+        while(!open.isEmpty()) {
+            Node now = open.remove();
+            if (target.isEmpty()) {
+                return allPaths;
+            }
+            for (Node food : target) {
+                if (food.getX() == now.getX() && food.getY() == now.getY()) {
+                    Stack<Node> paths = new Stack<>();
+                    Node node = now;
+                    while (node != null && !node.equals(Node.createFromPosition(mapInfo.getCurrentPosition(hero)))) {
+                        paths.push(node);
+                        node = node.getFather();
+                    }
+                    allPaths.put(food, paths);
+                    target.remove(food);
+                    break;
+                }
+            }
+            Node left = new Node(now.getX() - 1, now.getY());
+            Node right = new Node(now.getX() + 1, now.getY());
+            Node up = new Node(now.getX(), now.getY() - 1);
+            Node down = new Node(now.getX(), now.getY() + 1);
+            if (!restrictedNode.contains(up) && !visited.contains(up.toString()) && up.getX() <= mapInfo.size.cols
+                    && up.getX() >= 1 && up.getY() <= mapInfo.size.rows  && up.getY() >= 1 && (!isCollectSpoils || !mapInfo.getBalks().contains(up))) {
+                up.setFather(now);
+                open.add(up);
+                visited.add(up.toString());
+            }
+            if (!restrictedNode.contains(right) && !visited.contains(right.toString())
+                    && right.getX() <= mapInfo.size.cols && right.getX() >= 1 && right.getY() <= mapInfo.size.rows
+                    && right.getY() >= 1 && (!isCollectSpoils || !mapInfo.getBalks().contains(right))) {
+                right.setFather(now);
+                open.add(right);
+                visited.add(right.toString());
+            }
+            if (!restrictedNode.contains(down) && !visited.contains(down.toString()) && down.getX() <= mapInfo.size.cols
+                    && down.getX() >= 1 && down.getY() <= mapInfo.size.rows && down.getY() >= 1
+                    && (!isCollectSpoils || !mapInfo.getBalks().contains(down))) {
+                down.setFather(now);
+                open.add(down);
+                visited.add(down.toString());
+            }
+            if (!restrictedNode.contains(left) && !visited.contains(left.toString()) && left.getX() <= mapInfo.size.cols
+                    && left.getX() >= 1 && left.getY() <= mapInfo.size.rows && left.getY() >= 1
+                    && (!isCollectSpoils || !mapInfo.getBalks().contains(left))) {
+                left.setFather(now);
+                open.add(left);
+                visited.add(left.toString());
+            }
+        }
+        return allPaths;
     }
 }

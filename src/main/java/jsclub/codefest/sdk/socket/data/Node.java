@@ -5,6 +5,22 @@ public class Node extends Position {
     private int H =0;
     public Node father;
     public double V = 1;
+    private  int value=0;
+
+    public Node(int col, int row, int g) {
+        super(col, row);
+        G = g;
+    }
+
+   
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
 
     public Node(int x, int y) {
         super(x, y);

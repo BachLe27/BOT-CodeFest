@@ -4,7 +4,7 @@ import jsclub.codefest.sdk.socket.data.Node;
 import jsclub.codefest.sdk.socket.data.Dir;
 import jsclub.codefest.sdk.socket.data.Position;
 
-import java.util.Stack;
+import java.util.*;
 
 public class BaseAlgorithm {
     /**
@@ -13,10 +13,10 @@ public class BaseAlgorithm {
      * @param des destination position
      * @return shortest distance
      */
-    int manhattanDistance(Position src, Position des) {
+    public static int manhattanDistance(Position src, Position des) {
         return Math.abs(src.getX() - des.getX()) + Math.abs(src.getY() - des.getY());
     }
-    String getStepsInString(Node first, Stack<Node> path) {
+    public  static String getStepsInString(Node first, Stack<Node> path) {
         StringBuilder steps = new StringBuilder();
         Node previousStep = first;
         int size = path.size();
@@ -44,12 +44,13 @@ public class BaseAlgorithm {
         }
         return steps.toString();
     }
-    protected double distanceBetweenTwoPoints(Position p1, Position p2) {
+    public static double distanceBetweenTwoPoints(Position p1, Position p2) {
         //return Math.abs(src.getX() - des.getX()) + Math.abs(src.getY() - des.getY());
         return distanceBetweenTwoPoints(p1.getX(), p1.getY(), p2.getX(), p2.getY());
     }
 
-    private double distanceBetweenTwoPoints(int x1, int y1, int x2, int y2) {
+    public static double distanceBetweenTwoPoints(int x1, int y1, int x2, int y2) {
         return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     }
+
 }

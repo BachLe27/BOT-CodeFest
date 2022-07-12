@@ -99,6 +99,7 @@ public class MapInfo {
             }
             System.out.println();
         }
+
     }
 
 
@@ -117,55 +118,55 @@ public class MapInfo {
     // blank = 4
 
     public List<Node> getBalks() {
-        double balkValue = 6;
+        int balkValue = 6;
         List<Node> balks = new ArrayList<>();
         for (Position balk: this.balk) {
             Node temp = Node.createFromPosition(balk);
-            temp.setV(balkValue);
+            temp.setValue(balkValue);
             balks.add(temp);
         }
         return balks;
     }
 
     public List<Node> getWalls() {
-        double wallValue = 0;
+        int wallValue = 0;
         List<Node> walls = new ArrayList<>();
         for (Position wall: this.walls) {
             Node temp = Node.createFromPosition(wall);
-            temp.setV(wallValue);
+            temp.setValue(wallValue);
             walls.add(temp);
         }
         return walls;
     }
 
     public List<Node> getTeleportGates() {
-        double teleportGateValue = 0;
+        int teleportGateValue = 0;
         List<Node> teleportGates = new ArrayList<>();
         for (Position gate: this.teleportGate) {
             Node temp = Node.createFromPosition(gate);
-            temp.setV(teleportGateValue);
+            temp.setValue(teleportGateValue);
             teleportGates.add(temp);
         }
         return teleportGates;
     }
 
     public List<Node> getQuarantines() {
-        double quarantineValue = -1;
+        int quarantineValue = -1;
         List<Node> quarantines = new ArrayList<>();
         for (Position quarantine: this.quarantinePlace) {
             Node temp = Node.createFromPosition(quarantine);
-            temp.setV(quarantineValue);
+            temp.setValue(quarantineValue);
             quarantines.add(temp);
         }
         return quarantines;
     }
 
     public List<Node> getBlanks() {
-        double blankValue = 4;
+        int blankValue = 4;
         List<Node> blanks = new ArrayList<>();
         for (Position blank: this.blank) {
             Node temp = Node.createFromPosition(blank);
-            temp.setV(blank);
+            temp.setValue(blankValue);
             blanks.add(temp);
         }
         return blanks;
@@ -176,7 +177,7 @@ public class MapInfo {
         List<Node> list = new ArrayList<>();
         for (Human i : getDhuman()) {
             Node viruss = Node.createFromPosition(i.position);
-            viruss.setV(3);
+            viruss.setValue(3);
             list.add(viruss);
             list.add(viruss.nextPosition(i.direction,1));
         }
@@ -187,7 +188,7 @@ public class MapInfo {
         List<Node> list = new ArrayList<>();
         for (Human i : getNHuman()) {
             Node viruss = Node.createFromPosition(i.position);
-            viruss.setV(5);
+            viruss.setValue(5);
             list.add(viruss);
             list.add(viruss.nextPosition(i.direction,1));
         }
@@ -198,9 +199,22 @@ public class MapInfo {
         List<Node> list = new ArrayList<>();
         for (Viruses i : this.viruses) {
             Node viruss = Node.createFromPosition(i.position);
-            viruss.setV(3);
+            viruss.setValue(3);
             list.add(viruss);
-            list.add(viruss.nextPosition(i.direction,1));
+            Node next=viruss.nextPosition(i.direction,1);
+            if (next!=null)
+            {
+                next.setValue(3);
+
+                list.add(next);
+            }
+            next=viruss.nextPosition(i.direction,2);
+            if (next!=null)
+            {
+                next.setValue(3);
+
+                list.add(next);
+            }
         }
         //blank.removeall(list);
         return list;
@@ -209,7 +223,7 @@ public class MapInfo {
         List<Node> list = new ArrayList<>();
         for (Spoil i : this.spoils) {
             Node spoil = new Node(i.col,i.row);
-            spoil.setV(7);
+            spoil.setValue(7);
             list.add(spoil);
         }
         //blank.removeall(list);
@@ -221,14 +235,15 @@ public class MapInfo {
         for (Bomb i: this.bombs)
         {
             Node bomb=new Node(i.col,i.row);
-            bomb.setV(2);
+            bomb.setValue(2);
             list.add(bomb);
             Player player=getPlayerByKey(i.playerId);
             for (int d=1;d<5;d++)
             {
-                for (int p=1;p<player.power;p++)
+                for (int p=1;p<=player.power;p++)
                 {
                     Node effBomb=bomb.nextPosition(d,p);
+                    effBomb.setValue(2);
                     list.add(effBomb);
                     if (this.walls.contains(effBomb)|| (this.balk.contains(effBomb)))
                     {
