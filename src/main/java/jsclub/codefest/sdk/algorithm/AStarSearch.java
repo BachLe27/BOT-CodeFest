@@ -137,7 +137,7 @@ public class AStarSearch extends BaseAlgorithm{
     public static Map<Node, Stack<Node>> getPathsToAllFoods(MapInfo mapInfo, Hero hero, List<Node> targets, boolean isCollectSpoils) {
         List<Node> restrictedNode=new ArrayList<>();
         restrictedNode.addAll(mapInfo.getVirussList());
-        restrictedNode.addAll(mapInfo.getBalks());
+       // restrictedNode.addAll(mapInfo.getBalks());
         restrictedNode.addAll(mapInfo.getBombList());
         restrictedNode.addAll(mapInfo.getDHumanList());
         restrictedNode.addAll(mapInfo.getQuarantines());

@@ -219,8 +219,8 @@ public class Main {
         safeNode.addAll(blank);
         safeNode.removeIf(Objects::isNull);
         System.out.println("Int array: ");
-        for(Node i:safeNode)
-            System.out.println(i);
+        List<Node> balk=mapInfo.getBalks();
+
         if (safeNode.isEmpty())
             return Dir.DROP_BOMB;
         try{
@@ -234,10 +234,21 @@ public class Main {
                     return o2.getValue()-o1.getValue();
                 }
             });
+            Collections.sort(balk, new Comparator<Node>() {
+                @Override
+                public int compare(Node o1, Node o2) {
+                    if (o1.getValue()==o2.getValue())
+                    {
+                        return BaseAlgorithm.manhattanDistance(o1,mapInfo.getCurrentPosition(hero))-BaseAlgorithm.manhattanDistance(o2,mapInfo.getCurrentPosition(hero));
+                    }
+                    return o2.getValue()-o1.getValue();
+                }
+            });
         }catch(Exception e){
-
+            System.out.println(e);
         }
-
+        for(Node i:balk)
+            System.out.println(i+" balk");
 
 
         Node startNode=Node.createFromPosition(mapInfo.getCurrentPosition(hero));
@@ -250,7 +261,7 @@ public class Main {
                 if (blank.contains(safeNode.get(i)))
                 {
                     //datbom
-                    Map<Node, Stack<Node>> pathToAllBoxs = sortByComparator(AStarSearch.getPathsToAllFoods(mapInfo, hero, mapInfo.getBalks(), false), false);
+                    Map<Node, Stack<Node>> pathToAllBoxs = sortByComparator(AStarSearch.getPathsToAllFoods(mapInfo, hero, balk, false), false);
                     for (Map.Entry<Node, Stack<Node>> path : pathToAllBoxs.entrySet()) {
                         List<Node> listPlaceBom = getPlacingBom(path.getKey(), false,mapInfo,hero);
                         String step = getSimpleBombPath( listPlaceBom, mapInfo,hero);
@@ -279,6 +290,17 @@ public class Main {
                     return path;
                 }
 
+            }
+            else
+            {
+                Map<Node, Stack<Node>> pathToAllBoxs = sortByComparator(AStarSearch.getPathsToAllFoods(mapInfo, hero, balk, false), false);
+                for (Map.Entry<Node, Stack<Node>> path : pathToAllBoxs.entrySet()) {
+                    List<Node> listPlaceBom = getPlacingBom(path.getKey(), false,mapInfo,hero);
+                    String step = getSimpleBombPath( listPlaceBom, mapInfo,hero);
+                    if (!step.isEmpty()) {
+                        return step;
+                    }
+                }
             }
 
         }
