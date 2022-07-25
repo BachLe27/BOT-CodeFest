@@ -282,6 +282,7 @@ public class Main {
             }
 
         }
+
 return Dir.INVALID;
 //        for (Node i:safeNode)
 //        {
