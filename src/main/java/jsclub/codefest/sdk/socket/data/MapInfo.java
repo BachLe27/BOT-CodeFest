@@ -167,6 +167,7 @@ public class MapInfo {
         for (Position blank: this.blank) {
             Node temp = Node.createFromPosition(blank);
             temp.setValue(blankValue);
+            temp.setV(blankValue);
             blanks.add(temp);
         }
         return blanks;
