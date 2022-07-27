@@ -147,13 +147,16 @@ public class Main {
                         return steps;
                     }
                 } else {
-                    if (Node.createFromPosition(mapInfo.getCurrentPosition(hero)).equals(virtualBomplace)) {
-                        if (!escapePath.isEmpty()) {
-                            String dropBomb = Dir.DROP_BOMB;
-                            dropBomb = dropBomb + escapePath;
-                            return dropBomb;
-                        }
-                    }
+                    String dropBomb = Dir.DROP_BOMB;
+                    dropBomb = dropBomb + escapePath;
+                    return dropBomb;
+//                    if (Node.createFromPosition(mapInfo.getCurrentPosition(hero)).equals(virtualBomplace)) {
+//                        if (!escapePath.isEmpty()) {
+//                            String dropBomb = Dir.DROP_BOMB;
+//                            dropBomb = dropBomb + escapePath;
+//                            return dropBomb;
+//                        }
+//                    }
                 }
             }
 

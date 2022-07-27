@@ -14,7 +14,8 @@ public class Main2 {
         Random rand = new Random();
         int random_integer = rand.nextInt(5);
 
-        return "1234b".charAt(random_integer) + "";
+        //return "1234b".charAt(random_integer) + "";
+        return "1";
     }
 
     public static void main(String[] aDrgs) {
