@@ -123,15 +123,15 @@ public class AStarSearch extends BaseAlgorithm{
     }
 
     static Boolean isValidNode(int[][] matrix, Node n, List<Node> restrictNode) {
-        if (matrix[n.getY()][n.getX()] == MapEncode.ROAD) {
-            return true;
-        }
+
 
         if (matrix[n.getY()][n.getX()] == MapEncode.WALL || matrix[n.getY()][n.getX()] == MapEncode.BALK
         || matrix[n.getY()][n.getX()] == MapEncode.QUARANTINE_PLACE || matrix[n.getY()][n.getX()] == MapEncode.TELEPORT_GATE) {
             return false;
         }
-
+        if (matrix[n.getY()][n.getX()] == MapEncode.ROAD) {
+            return true;
+        }
         return !restrictNode.contains(n);
     }
     public static Map<Node, Stack<Node>> getPathsToAllFoods(MapInfo mapInfo, Hero hero, List<Node> targets, boolean isCollectSpoils) {

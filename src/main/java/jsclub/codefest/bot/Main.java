@@ -198,6 +198,19 @@ public class Main {
         }
         return Dir.INVALID;
     }
+    public static boolean isInEndanger(MapInfo mapInfo,Position position)
+    {
+        List<Node> restrictedNode=new ArrayList<>();
+        restrictedNode.addAll(mapInfo.getVirussList());
+        restrictedNode.addAll(mapInfo.getBombList());
+        restrictedNode.addAll(mapInfo.getDHumanList());
+        restrictedNode.addAll(mapInfo.getQuarantines());
+        restrictedNode.addAll(mapInfo.getTeleportGates());
+        if (restrictedNode.contains(position))
+            return true;
+        return false;
+    }
+
     public static String tactic(MapInfo mapInfo,Hero hero) {
         mapInfo.updateMapInfo();
         //set safenode, restrictednode
@@ -253,17 +266,55 @@ public class Main {
         for(Node i:balk)
             System.out.println(i+" balk");
 
-
-        Node startNode=Node.createFromPosition(mapInfo.getCurrentPosition(hero));
-        for (int i=0;i<safeNode.size();i++)
+        if (isInEndanger(mapInfo,mapInfo.getCurrentPosition(hero)))
         {
-            Stack<Node> steps =  AStarSearch.aStarSearch(map, restrictedNode, startNode, safeNode.get(i));
-            if (!steps.empty())
+            String path=getEscapePathVirtual(mapInfo,hero,-1);
+            return path;
+        }
+        else
+        {
+            Node startNode=Node.createFromPosition(mapInfo.getCurrentPosition(hero));
+            for (int i=0;i<safeNode.size();i++)
             {
-                System.out.println("go to node"+safeNode.get(i));
-                if (blank.contains(safeNode.get(i)))
+                Stack<Node> steps =  AStarSearch.aStarSearch(map, restrictedNode, startNode, safeNode.get(i));
+                if (!steps.empty())
                 {
-                    //datbom
+                    System.out.println("go to node"+safeNode.get(i));
+                    if (blank.contains(safeNode.get(i)))
+                    {
+                        //datbom
+                        Map<Node, Stack<Node>> pathToAllBoxs = sortByComparator(AStarSearch.getPathsToAllFoods(mapInfo, hero, balk, false), false);
+                        for (Map.Entry<Node, Stack<Node>> path : pathToAllBoxs.entrySet()) {
+                            List<Node> listPlaceBom = getPlacingBom(path.getKey(), false,mapInfo,hero);
+                            String step = getSimpleBombPath( listPlaceBom, mapInfo,hero);
+                            if (!step.isEmpty()) {
+                                return step;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        String path=BaseAlgorithm.getStepsInString(startNode, steps);
+                        System.out.println(path+"path");
+                        try{
+                            Node next=Node.createFromPosition(mapInfo.getCurrentPosition(hero)).nextPosition(Integer.parseInt(path),1);
+                            System.out.println(next+"next");
+                            if (next!=null)
+                            {
+                                if (mapInfo.getBalks().contains(next))
+                                    return Dir.DROP_BOMB;
+
+                            }
+
+                        }catch(Exception e){
+
+                        }
+                        return path;
+                    }
+
+                }
+                else
+                {
                     Map<Node, Stack<Node>> pathToAllBoxs = sortByComparator(AStarSearch.getPathsToAllFoods(mapInfo, hero, balk, false), false);
                     for (Map.Entry<Node, Stack<Node>> path : pathToAllBoxs.entrySet()) {
                         List<Node> listPlaceBom = getPlacingBom(path.getKey(), false,mapInfo,hero);
@@ -273,40 +324,10 @@ public class Main {
                         }
                     }
                 }
-                else
-                {
-                    String path=BaseAlgorithm.getStepsInString(startNode, steps);
-                    System.out.println(path+"path");
-                    try{
-                        Node next=Node.createFromPosition(mapInfo.getCurrentPosition(hero)).nextPosition(Integer.parseInt(path),1);
-                        System.out.println(next+"next");
-                        if (next!=null)
-                        {
-                            if (mapInfo.getBalks().contains(next))
-                                return Dir.DROP_BOMB;
-
-                        }
-
-                    }catch(Exception e){
-
-                    }
-                    return path;
-                }
 
             }
-            else
-            {
-                Map<Node, Stack<Node>> pathToAllBoxs = sortByComparator(AStarSearch.getPathsToAllFoods(mapInfo, hero, balk, false), false);
-                for (Map.Entry<Node, Stack<Node>> path : pathToAllBoxs.entrySet()) {
-                    List<Node> listPlaceBom = getPlacingBom(path.getKey(), false,mapInfo,hero);
-                    String step = getSimpleBombPath( listPlaceBom, mapInfo,hero);
-                    if (!step.isEmpty()) {
-                        return step;
-                    }
-                }
-            }
-
         }
+
 
 return Dir.INVALID;
 //        for (Node i:safeNode)
